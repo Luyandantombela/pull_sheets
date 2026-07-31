@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sheet Importer</title>
+
+  <!-- Office.js must be loaded first -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+
+  <!-- SheetJS — reads .xlsx / .xlsm files in the browser -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+  <!-- Fluent UI Web Components (Microsoft recommended for no-React add-ins) -->
+  <script type="module" src="https://unpkg.com/@fluentui/web-components@2/dist/web-components.min.js"></script>
+
+  <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ── Header ── -->
+    <header class="app-header">
+      <img src="assets/images/icon-32.png" alt="Sheet Importer" class="app-logo" onerror="this.style.display='none'" />
+      <span class="app-title">Sheet Importer</span>
+    </header>
+
+    <!-- ── Upload Area ── -->
+    <section class="upload-section">
+      <div
+        id="dropZone"
+        class="drop-zone"
+        role="button"
+        tabindex="0"
+        aria-label="Upload Excel workbooks. Click or drag files here."
+      >
+        <div class="drop-zone__icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="#0078d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 16.7C21.2 16.1 22 14.9 22 13.5C22 11.6 20.5 10 18.5 10C18.3 10 18.1 10 17.9 10.1C17.4 7.7 15.2 6 12.5 6C9.5 6 7 8.4 7 11.5C7 11.7 7 11.8 7 12C5.3 12.4 4 13.9 4 15.7C4 17.8 5.7 19.5 7.8 19.5H19.5" stroke="#0078d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="drop-zone__primary">Drag &amp; drop workbooks here</p>
+        <p class="drop-zone__secondary">or</p>
+        <button id="browseBtn" class="btn btn--primary btn--sm" type="button">Browse files</button>
+        <p class="drop-zone__hint">.xlsx and .xlsm files supported &middot; Multiple files allowed</p>
+      </div>
+      <!-- Hidden file input -->
+      <input
+        id="fileInput"
+        type="file"
+        accept=".xlsx,.xlsm"
+        multiple
+        class="visually-hidden"
+        aria-label="Select Excel files"
+      />
+    </section>
+
+    <!-- ── Workbook Cards ── -->
+    <section id="workbookList" class="workbook-list" aria-label="Uploaded workbooks" aria-live="polite">
+      <!-- Cards injected by ui.js -->
+    </section>
+
+    <!-- ── Empty state (shown when no workbooks) ── -->
+    <div id="emptyState" class="empty-state" hidden>
+      <p>No workbooks uploaded yet. Use the area above to add files.</p>
+    </div>
+
+    <!-- ── Summary Bar ── -->
+    <footer class="summary-bar" id="summaryBar">
+      <div class="summary-stats">
+        <span id="wbCount" class="stat">0 workbooks</span>
+        <span class="stat-sep" aria-hidden="true">&bull;</span>
+        <span id="sheetCount" class="stat">0 sheets selected</span>
+      </div>
+
+      <!-- Progress (hidden until import starts) -->
+      <div id="progressWrap" class="progress-wrap" hidden aria-live="polite">
+        <p id="progressLabel" class="progress-label">Importing…</p>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Result message -->
+      <div id="resultMsg" class="result-msg" hidden role="status"></div>
+
+      <button id="importBtn" class="btn btn--import" type="button" disabled>
+        Import Selected Sheets
+      </button>
+    </footer>
+
+  </div><!-- /#app -->
+
+  <!-- Modules (order matters: dependencies first) -->
+  <script src="assets/js/workbook-manager.js"></script>
+  <script src="assets/js/file-reader.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/importer.js"></script>
+  <script src="taskpane.js"></script>
+
+</body>
+</html>
